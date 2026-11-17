@@ -1,11 +1,12 @@
 import { ref } from "vue";
 import type { Entry, Hotspot, Position } from "../../../shared/types";
+import type { GuideRole } from "../../guide/model/protocol";
 import { loadEntries, persist } from "../lib/storage";
-export function createJournal() {
-  const entries = ref<Entry[]>(loadEntries()),
+export function createJournal(role: GuideRole | null = null) {
+  const entries = ref<Entry[]>(loadEntries(role)),
     error = ref("");
   function commit(next: Entry[]) {
-    if (!persist(next)) {
+    if (!persist(next, role)) {
       error.value = "本地空间不足，记录未保存，请先导出手记";
       return;
     }

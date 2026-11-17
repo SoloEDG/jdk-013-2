@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import { chapters } from "../../../shared/content";
 import { timecode } from "../../../shared/format";
-defineProps<{ active: string }>();
-defineEmits<{ select: [id: string] }>();
+defineProps<{ active: string; locked?: boolean }>();
+const emit = defineEmits<{ select: [id: string] }>();
+function choose(id: string, locked?: boolean) {
+  if (locked) return;
+  emit("select", id);
+}
 </script>
 <template>
-  <div class="chapter-list">
+  <div class="chapter-list" :class="{ 'is-locked': locked }">
     <button
       v-for="(chapter, i) in chapters"
       :key="chapter.id"
       :class="{ active: active === chapter.id }"
-      @click="$emit('select', chapter.id)"
+      :disabled="locked"
+      @click="choose(chapter.id, locked)"
     >
       <div
         class="chapter-thumb"

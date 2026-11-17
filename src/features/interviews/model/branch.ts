@@ -1,5 +1,6 @@
 import { computed, ref } from "vue";
 import type { Position } from "../../../shared/types";
+import { deepClone } from "../../../shared/clone";
 import { findPerson } from "../lib/transcript";
 export function createBranch() {
   const personId = ref<string | null>(null),
@@ -10,7 +11,7 @@ export function createBranch() {
   );
   function enter(id: string, position: Position) {
     if (!findPerson(id)) return;
-    returnPoint.value = structuredClone(position);
+    returnPoint.value = deepClone(position);
     personId.value = id;
     paragraph.value = 0;
   }
